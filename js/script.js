@@ -3,6 +3,7 @@ var add= document.querySelector("#add")
 var mainIndex=0;
 var taskContainer= [];
 var addMode = true
+var message =document.querySelector("#message")
 
 
 if(localStorage.getItem("tasks") != null){
@@ -19,16 +20,25 @@ add.addEventListener("click" , function(){
 
 // add
 function addTo(){
-    if(addMode){
+    if(newTask.value !== ""){
         var task ={
-            name:newTask.value 
+            name:newTask.value
         }
-        taskContainer.push(task)
-        localStorage.setItem("tasks" , JSON.stringify(taskContainer))
-    }
-    else{
-        update(task)
-        clear()
+        if(addMode){
+            taskContainer.push(task)
+            localStorage.setItem("tasks" , JSON.stringify(taskContainer))
+            message.innerHTML ="Done"
+            message.classList.add( "text-white" )
+            
+        }
+        else{
+            update(task)
+            clear()
+        }
+    }else{
+        message.innerHTML ="Can't Be empty"
+        message.classList.remove( "text-white" )
+        message.classList.add( "text-dark" )
     }
 }
 
@@ -57,7 +67,7 @@ function display(){
                                     </tr>
         `
     }
-    console.log(cartoona);
+
     
     document.querySelector("#allTasks").innerHTML = cartoona
 }
@@ -66,7 +76,6 @@ function display(){
 // delete
 function deleteTask(index){
     taskContainer.splice(index , 1)
-    console.log(taskContainer);
     display()
     localStorage.setItem("tasks" , JSON.stringify(taskContainer))
 }
@@ -81,10 +90,10 @@ function patch(index){
 }
 
 function update(task){
-    taskContainer.splice(mainIndex ,1 , task)
+    taskContainer.splice(mainIndex , 1 , task)
+    localStorage.setItem("tasks" , JSON.stringify(taskContainer))
     add.innerHTML="Add"
     add.classList.remove( "btn" ,"btn-warning", "ms-2");
     add.classList.add("btn", "btn-primary", "ms-2");
     addMode = true;
-    
 }
